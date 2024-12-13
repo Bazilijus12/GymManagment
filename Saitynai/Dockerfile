@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0@sha256:35792ea4ad1db051981f62b313f1be3b46b
 WORKDIR /App
 
 # Copy everything from the local project directory to the container
-COPY /Back/Saitynai
+COPY C:\Users\vytau\OneDrive\Dokumentai\GitHub\Back\Saitynai
 
 # Restore dependencies
 RUN dotnet restore
