@@ -1,0 +1,416 @@
+openapi: 3.1.0
+info:
+  title: Gym Management API
+  description: API for managing gyms, workouts, and reviews.
+  version: 1.0.0
+
+servers:
+  - url: https://api.example.com/v1
+
+paths:
+  /gyms:
+    get:
+      summary: Get a list of gyms
+      tags: [gym]
+      responses:
+        "200":
+          description: A list of gyms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/gym"
+              example:
+                - id: 1
+                  name: "SuperFit Gym"
+                  address: "123 Main Street"
+                  city: "New York"
+                  phoneNumber: "555-1234"
+                  email: "contact@superfitgym.com"
+                  capacity: 100
+                - id: 2
+                  name: "Powerhouse Gym"
+                  address: "456 Elm Street"
+                  city: "Los Angeles"
+                  phoneNumber: "555-5678"
+                  email: "info@powerhousegym.com"
+                  capacity: 200
+
+    post:
+      summary: Create a gym
+      tags: [gym]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createGym"
+            example:
+              name: "UltraFit Gym"
+              address: "789 Maple Avenue"
+              city: "Chicago"
+              phoneNumber: "555-9876"
+              email: "admin@ultrafitgym.com"
+              capacity: 150
+      responses:
+        "201":
+          $ref: "#/components/responses/gymCreated"
+
+  /gyms/{gymId}:
+    get:
+      summary: Get a gym by ID
+      tags: [gym]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+      responses:
+        "200":
+          $ref: "#/components/responses/gymDetails"
+
+    put:
+      summary: Update a gym
+      tags: [gym]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateGym"
+            example:
+              name: "789 Maple Avenue"
+      responses:
+        "200":
+          $ref: "#/components/responses/gymDetails"
+
+    delete:
+      summary: Delete a gym
+      tags: [gym]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+      responses:
+        "204":
+          description: Gym deleted successfully
+
+  /gyms/{gymId}/workouts:
+    get:
+      summary: Get workouts for a gym
+      tags: [workout]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+      responses:
+        "200":
+          description: A list of workouts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/workout"
+              example:
+                - id: 1
+                  name: "Morning Yoga"
+                  description: "A calming yoga session."
+                  duration: 60
+                  workoutDate: "2024-11-20T08:00:00Z"
+                  difficulty: "Beginner"
+                  caloriesBurned: 200
+                  type: "Yoga"
+                  maxParticipants: 20
+                - id: 2
+                  name: "HIIT Blast"
+                  description: "High-Intensity Interval Training."
+                  duration: 45
+                  workoutDate: "2024-11-21T10:00:00Z"
+                  difficulty: "Advanced"
+                  caloriesBurned: 500
+                  type: "HIIT"
+                  maxParticipants: 15
+
+    post:
+      summary: Create a workout
+      tags: [workout]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createWorkout"
+            example:
+              name: "Pilates Core"
+              description: "A core-focused pilates workout."
+              duration: 50
+              workoutDate: "2024-12-01T09:00:00Z"
+              difficulty: "Intermediate"
+              caloriesBurned: 300
+              type: "Pilates"
+              maxParticipants: 25
+      responses:
+        "201":
+          description: Workout created successfully
+
+  /gyms/{gymId}/workouts/{workoutId}:
+    get:
+      summary: Get a specific workout
+      tags: [workout]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+        - $ref: "#/components/parameters/workoutId"
+      responses:
+        "200":
+          description: A single workout details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/workout"
+              example:
+                id: 1
+                name: "Morning Yoga"
+                description: "A calming yoga session."
+                duration: 60
+                workoutDate: "2024-11-20T08:00:00Z"
+                difficulty: "Beginner"
+                caloriesBurned: 200
+                type: "Yoga"
+                maxParticipants: 20
+
+    put:
+      summary: Update a workout
+      tags: [workout]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+        - $ref: "#/components/parameters/workoutId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateWorkout"
+            example:
+              description: "Updated description for the yoga session."
+      responses:
+        "200":
+          description: Workout updated successfully
+
+    delete:
+      summary: Delete a workout
+      tags: [workout]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+        - $ref: "#/components/parameters/workoutId"
+      responses:
+        "204":
+          description: Workout deleted successfully
+
+  /gyms/{gymId}/workouts/{workoutId}/reviews:
+    get:
+      summary: Get reviews for a workout
+      tags: [review]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+        - $ref: "#/components/parameters/workoutId"
+      responses:
+        "200":
+          description: A list of reviews
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/review"
+              example:
+                - id: 1
+                  rating: 5
+                  comment: "Amazing workout session!"
+                  reviewDate: "2024-11-01T12:00:00Z"
+                - id: 2
+                  rating: 4
+                  comment: "Great but very intense."
+                  reviewDate: "2024-11-02T10:30:00Z"
+
+    post:
+      summary: Create a review
+      tags: [review]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+        - $ref: "#/components/parameters/workoutId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createReview"
+            example:
+              rating: 4
+              comment: "Challenging but rewarding."
+              reviewDate: "2024-11-03T11:00:00Z"
+      responses:
+        "201":
+          description: Review created successfully
+
+  /gyms/{gymId}/workouts/{workoutId}/reviews/{reviewId}:
+    get:
+      summary: Get a specific review
+      tags: [review]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+        - $ref: "#/components/parameters/workoutId"
+        - $ref: "#/components/parameters/reviewId"
+      responses:
+        "200":
+          description: Review details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/review"
+              example:
+                id: 1
+                rating: 5
+                comment: "Amazing workout session!"
+                reviewDate: "2024-11-01T12:00:00Z"
+
+    put:
+      summary: Update a review
+      tags: [review]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+        - $ref: "#/components/parameters/workoutId"
+        - $ref: "#/components/parameters/reviewId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateReview"
+            example:
+              comment: "Updated comment: Great workout!"
+      responses:
+        "200":
+          description: Review updated successfully
+
+    delete:
+      summary: Delete a review
+      tags: [review]
+      parameters:
+        - $ref: "#/components/parameters/gymId"
+        - $ref: "#/components/parameters/workoutId"
+        - $ref: "#/components/parameters/reviewId"
+      responses:
+        "204":
+          description: Review deleted successfully
+
+components:
+  schemas:
+    gym:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        address: { type: string }
+        city: { type: string }
+        phoneNumber: { type: string }
+        email: { type: string }
+        capacity: { type: integer }
+
+    createGym:
+      type: object
+      properties:
+        name: { type: string }
+        address: { type: string }
+        city: { type: string }
+        phoneNumber: { type: string }
+        email: { type: string }
+        capacity: { type: integer }
+
+    updateGym:
+      type: object
+      properties:
+        name: { type: string }
+        address: { type: string }
+        city: { type: string }
+        phoneNumber: { type: string }
+        email: { type: string }
+        capacity: { type: integer }
+
+    workout:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        description: { type: string }
+        duration: { type: integer }
+        workoutDate: { type: string, format: date-time }
+        difficulty: { type: string }
+        caloriesBurned: { type: integer }
+        type: { type: string }
+        maxParticipants: { type: integer }
+
+    createWorkout:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+        duration: { type: integer }
+        workoutDate: { type: string, format: date-time }
+        difficulty: { type: string }
+        caloriesBurned: { type: integer }
+        type: { type: string }
+        maxParticipants: { type: integer }
+
+    updateWorkout:
+      type: object
+      properties:
+        description: { type: string }
+        maxParticipants: { type: integer }
+
+    review:
+      type: object
+      properties:
+        id: { type: integer }
+        rating: { type: integer }
+        comment: { type: string }
+        reviewDate: { type: string, format: date-time }
+
+    createReview:
+      type: object
+      properties:
+        rating: { type: integer }
+        comment: { type: string }
+        reviewDate: { type: string, format: date-time }
+
+    updateReview:
+      type: object
+      properties:
+        comment: { type: string }
+
+  parameters:
+    gymId:
+      name: gymId
+      in: path
+      required: true
+      schema:
+        type: integer
+    workoutId:
+      name: workoutId
+      in: path
+      required: true
+      schema:
+        type: integer
+    reviewId:
+      name: reviewId
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  responses:
+    gymCreated:
+      description: Gym created successfully
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/gym"
+
+    gymDetails:
+      description: Gym details
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/gym"
