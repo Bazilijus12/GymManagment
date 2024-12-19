@@ -257,7 +257,7 @@ namespace Saitynai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Gyms");
+                    b.ToTable("Gyms", (string)null);
                 });
 
             modelBuilder.Entity("Saitynai.Data.Entities.Review", b =>
@@ -309,7 +309,7 @@ namespace Saitynai.Migrations
 
                     b.HasIndex("WorkoutId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Saitynai.Data.Entities.Session", b =>
@@ -339,7 +339,7 @@ namespace Saitynai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Sessions");
+                    b.ToTable("Sessions", (string)null);
                 });
 
             modelBuilder.Entity("Saitynai.Data.Entities.Workout", b =>
@@ -386,7 +386,7 @@ namespace Saitynai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Workouts");
+                    b.ToTable("Workouts", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
